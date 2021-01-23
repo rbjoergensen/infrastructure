@@ -14,6 +14,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
+    - name: Print version
+      run: echo "1.0.$GITHUB_RUN_NUMBER"
     - name: Publish to NuGet
       uses: brandedoutcast/publish-nuget@v2
       with:
