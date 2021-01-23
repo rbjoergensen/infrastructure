@@ -13,18 +13,20 @@ namespace Infrastructure
                 // Set storelocation to My when using on Windows and Root when running on Linux(eg. Docker container)
                 store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);
+
                 X509Certificate2Collection col = new X509Certificate2Collection();
                 col.Import(certPath, certPass, X509KeyStorageFlags.PersistKeySet);
+
                 if (col == null || col.Count == 0)
                 {
-                    Logging.log.Error("Problem loading pfx certificate");
+                    throw new Exception("Problem loading pfx certificate");
                 }
+
                 return col[0];
             }
             catch (Exception ex)
             {
-                Logging.log.Error($"Problem loading pfx certificate: {ex.Message}");
-                return null;
+                throw new Exception($"Problem loading pfx certificate: {ex.Message}");
             }
             finally
             {

@@ -13,12 +13,11 @@ namespace Infrastructure.Azure
 
         public static void Load(string uri, string tenantId, string clientId, string labelFilter, string pfxFilePath = null, string certPassword = null)
         {
-            Logging.log.Information("Running LoadAppConfig Method");
             try
             {
-                // Using a X509 certificate to access configuration by authenticating through an application with the 'App Configuration Data Reader' role on the App Configuration
                 var endpoint = new Uri(uri);
                 var builder = new ConfigurationBuilder();
+
                 builder.AddAzureAppConfiguration(options =>
                 {
                     var clientAssertionCertPfx = Certificates.LoadX509Certificate(pfxFilePath, certPassword);
@@ -34,12 +33,12 @@ namespace Infrastructure.Azure
                         kv.SetCredential(new ClientCertificateCredential(tenantId, clientId, clientAssertionCertPfx));
                     });
                 });
-                config = builder.Build();
 
+                config = builder.Build();
             }
             catch (Exception ex)
             {
-                Logging.log.Error(ex.Message);
+                throw new Exception($"Error loading AppConfig: {ex.Message}");
             }
         }
     }
