@@ -16,11 +16,13 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Print version
       run: echo "1.0.$GITHUB_RUN_NUMBER"
+    - name: Set version
+      run: NugetVersion="1.0.$GITHUB_RUN_NUMBER"
     - name: Publish to NuGet
       uses: brandedoutcast/publish-nuget@v2
       with:
         PROJECT_FILE_PATH: Infrastructure/Infrastructure.csproj
         # VERSION_REGEX: '^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$'
-        VERSION_STATIC: "1.0.$GITHUB_RUN_NUMBER"
+        VERSION_STATIC: $NugetVersion
         TAG_FORMAT: '*'
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
